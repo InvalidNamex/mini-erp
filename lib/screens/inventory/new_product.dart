@@ -1,24 +1,25 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:mini_erp/widgets/divider_widget.dart';
-
 import '../../constants.dart';
 import '../../widgets/tax_table.dart';
 import '/controllers/inventory_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class NewProduct extends GetView<InventoryController> {
-  const NewProduct({super.key});
-
+class NewProduct extends StatelessWidget {
+  NewProduct({super.key});
+  final InventoryController controller = Get.find<InventoryController>();
   @override
   Widget build(BuildContext context) {
+    controller.populateCategoryList();
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: darkColor,
           onPressed: () {
-            print(inventoryController.taxesValues.map((e) => e.taxPercentage));
-            print(inventoryController.priceListValues.map((e) => e.price));
+            print(controller.taxesValues.map((e) => e.taxPercentage));
+            print(controller.priceListValues.map((e) => e.price));
           },
           label: Row(
             children: [const Icon(Icons.add), Text('Save'.tr)],
@@ -49,21 +50,96 @@ class NewProduct extends GetView<InventoryController> {
       ),
     );
   }
-}
 
-Widget productDetails() => Padding(
+  Widget taxListTab() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Obx(
+            () => Expanded(
+              child: controller.taxesNamesList.isEmpty
+                  ? Center(
+                      child: Container(
+                      color: lightColor,
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        'Please define taxes in Store management'.tr,
+                        style: TextStyle(
+                            color: accentColor,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ))
+                  : buildTaxBatteryTable(),
+            ),
+          ),
+        ],
+      );
+  Widget priceListTab() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Obx(
+            () => Expanded(
+              child: controller.priceListNamesList.isEmpty
+                  ? Center(
+                      child: Container(
+                      color: lightColor,
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        'Please define price lists names in Store management'
+                            .tr,
+                        style: TextStyle(
+                            color: accentColor,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ))
+                  : buildPriceListBatteryTable(),
+            ),
+          ),
+        ],
+      );
+  Widget productDetails() {
+    return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Form(
-        key: inventoryController.newProductFormKey,
+        key: controller.newProductFormKey,
         child: ListView(
           children: [
+            const SizedBox(
+              height: 7,
+            ),
+            DropdownSearch<String>(
+              popupProps: PopupProps.menu(
+                showSelectedItems: true,
+                disabledItemFn: (String s) => s.startsWith('I'),
+              ),
+              items: controller.categoryNamesList,
+              dropdownDecoratorProps: DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  focusColor: darkColor,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: darkColor),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: darkColor),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  labelText: 'Categories'.tr,
+                  hintText: "choose a category".tr,
+                  labelStyle: TextStyle(color: darkColor),
+                ),
+              ),
+              onChanged: print,
+              selectedItem: controller.categoryNamesList[0],
+            ),
             const SizedBox(
               height: 5,
             ),
             TextFormField(
               style: TextStyle(color: darkColor),
               cursorColor: accentColor,
-              controller: inventoryController.productName,
+              controller: controller.productName,
               decoration: InputDecoration(
                 focusColor: darkColor,
                 focusedBorder: OutlineInputBorder(
@@ -90,7 +166,7 @@ Widget productDetails() => Padding(
               cursorColor: accentColor,
               maxLines: 3,
               style: TextStyle(color: darkColor),
-              controller: inventoryController.productDescription,
+              controller: controller.productDescription,
               decoration: InputDecoration(
                 focusColor: darkColor,
                 focusedBorder: OutlineInputBorder(
@@ -130,7 +206,7 @@ Widget productDetails() => Padding(
               keyboardType: TextInputType.number,
               cursorColor: accentColor,
               style: TextStyle(color: darkColor),
-              controller: inventoryController.productOpeningPrice,
+              controller: controller.productOpeningPrice,
               decoration: InputDecoration(
                 focusColor: darkColor,
                 focusedBorder: OutlineInputBorder(
@@ -158,7 +234,7 @@ Widget productDetails() => Padding(
               keyboardType: TextInputType.number,
               cursorColor: accentColor,
               style: TextStyle(color: darkColor),
-              controller: inventoryController.productOpeningQuantity,
+              controller: controller.productOpeningQuantity,
               decoration: InputDecoration(
                 focusColor: darkColor,
                 focusedBorder: OutlineInputBorder(
@@ -186,7 +262,7 @@ Widget productDetails() => Padding(
               keyboardType: TextInputType.number,
               cursorColor: accentColor,
               style: TextStyle(color: darkColor),
-              controller: inventoryController.productMinQuantity,
+              controller: controller.productMinQuantity,
               decoration: InputDecoration(
                 focusColor: darkColor,
                 focusedBorder: OutlineInputBorder(
@@ -210,51 +286,5 @@ Widget productDetails() => Padding(
         ),
       ),
     );
-
-Widget taxListTab() => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Obx(
-          () => Expanded(
-            child: inventoryController.taxesNamesList.isEmpty
-                ? Center(
-                    child: Container(
-                    color: lightColor,
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      'Please define taxes in Store management'.tr,
-                      style: TextStyle(
-                          color: accentColor,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ))
-                : buildTaxBatteryTable(),
-          ),
-        ),
-      ],
-    );
-
-Widget priceListTab() => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Obx(
-          () => Expanded(
-            child: inventoryController.priceListNamesList.isEmpty
-                ? Center(
-                    child: Container(
-                    color: lightColor,
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      'Please define price lists names in Store management'.tr,
-                      style: TextStyle(
-                          color: accentColor,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ))
-                : buildPriceListBatteryTable(),
-          ),
-        ),
-      ],
-    );
+  }
+}

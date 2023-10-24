@@ -13,7 +13,7 @@ import '../../widgets/vertical_divider.dart';
 import '/controllers/inventory_controller.dart';
 import 'package:flutter/material.dart';
 
-class InventoryScreen extends GetView<InventoryController> {
+class InventoryScreen extends StatelessWidget {
   const InventoryScreen({super.key});
 
   @override
@@ -39,7 +39,7 @@ class InventoryScreen extends GetView<InventoryController> {
             isScrollable: true,
             tabs: [
               Tab(text: 'Products'.tr),
-              Tab(text: 'Classifications'.tr),
+              Tab(text: 'Categories'.tr),
               Tab(text: 'Price lists'.tr),
               Tab(text: 'Taxes'.tr),
             ],
@@ -81,7 +81,7 @@ class InventoryScreen extends GetView<InventoryController> {
                   ),
                 ],
               ),
-              const ClassificationTab(),
+              const CategoryTab(),
               const PriceListTab(),
               const TaxListTab(),
             ],
@@ -92,8 +92,8 @@ class InventoryScreen extends GetView<InventoryController> {
   }
 }
 
-class ClassificationTab extends GetView<InventoryController> {
-  const ClassificationTab({
+class CategoryTab extends GetView<InventoryController> {
+  const CategoryTab({
     super.key,
   });
 
@@ -110,7 +110,7 @@ class ClassificationTab extends GetView<InventoryController> {
                     color: lightColor,
                     padding: const EdgeInsets.all(5),
                     child: Text(
-                      'classifications are empty'.tr,
+                      'categories are empty'.tr,
                       style: TextStyle(
                           color: accentColor,
                           fontSize: 24,
@@ -240,9 +240,7 @@ class PriceListTab extends GetView<InventoryController> {
 }
 
 class TaxListTab extends GetView<InventoryController> {
-  const TaxListTab({
-    super.key,
-  });
+  const TaxListTab({super.key});
 
   @override
   Widget build(BuildContext context) {

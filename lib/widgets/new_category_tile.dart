@@ -14,9 +14,9 @@ class NewCategory extends GetView<InventoryController> {
         onTap: () async {
           Get.back();
           Get.defaultDialog(
-            title: 'New classification'.tr,
+            title: 'New Category'.tr,
             content: Form(
-              key: controller.addClassificationFormKey,
+              key: controller.addCategoryFormKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -27,7 +27,7 @@ class NewCategory extends GetView<InventoryController> {
                       return null; // Return null if the input is valid
                     },
                     decoration: InputDecoration(
-                      hintText: 'Classification name'.tr,
+                      hintText: 'Category name'.tr,
                       focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(
                             color: Colors
@@ -41,7 +41,7 @@ class NewCategory extends GetView<InventoryController> {
                     ),
                     cursorColor: darkColor, // Change the cursor color
                     autofocus: true,
-                    controller: controller.addClassificationTextController,
+                    controller: controller.addCategoryTextController,
                   ),
                   SizedBox(
                       width: double
@@ -52,8 +52,7 @@ class NewCategory extends GetView<InventoryController> {
                                 darkColor), // Set the button's background color
                           ),
                           onPressed: () async {
-                            if (controller
-                                .addClassificationFormKey.currentState!
+                            if (controller.addCategoryFormKey.currentState!
                                 .validate()) {
                               List<CategoryModel> categories =
                                   await dbController.readCategories();
@@ -61,22 +60,20 @@ class NewCategory extends GetView<InventoryController> {
                               for (var element in categories) {
                                 categoryNames.add(element.categoryName);
                               }
-                              if (!categoryNames.contains(controller
-                                  .addClassificationTextController.text)) {
+                              if (!categoryNames.contains(
+                                  controller.addCategoryTextController.text)) {
                                 await dbController.addCategory(CategoryModel(
                                     categoryName: controller
-                                        .addClassificationTextController.text));
+                                        .addCategoryTextController.text));
                                 controller.categoryList.value =
                                     await dbController.readCategories();
-                                controller.addClassificationTextController
-                                    .clear();
+                                controller.addCategoryTextController.clear();
                                 Get.back();
                               } else {
-                                controller.addClassificationTextController
-                                    .clear();
+                                controller.addCategoryTextController.clear();
                                 Get.back();
                                 Get.snackbar('Repetitive Name'.tr,
-                                    'Classification name already exists'.tr,
+                                    'Category name already exists'.tr,
                                     backgroundColor: accentColor);
                               }
                             }
@@ -92,7 +89,7 @@ class NewCategory extends GetView<InventoryController> {
           size: 30,
           color: darkColor,
         ),
-        title: Text('New classification'.tr,
+        title: Text('New Category'.tr,
             style: TextStyle(
               color: darkColor,
             )),

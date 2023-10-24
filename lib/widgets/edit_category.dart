@@ -12,9 +12,9 @@ class EditCategory extends GetView<InventoryController> {
   Widget build(BuildContext context) {
     return IconButton(
         onPressed: () async => Get.defaultDialog(
-              title: 'Edit classification'.tr,
+              title: 'Edit category'.tr,
               content: Form(
-                key: controller.editClassificationFormKey,
+                key: controller.editCategoryFormKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -25,7 +25,7 @@ class EditCategory extends GetView<InventoryController> {
                         return null; // Return null if the input is valid
                       },
                       decoration: InputDecoration(
-                        hintText: 'Classification name'.tr,
+                        hintText: 'Category name'.tr,
                         focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Colors
@@ -39,7 +39,7 @@ class EditCategory extends GetView<InventoryController> {
                       ),
                       cursorColor: Colors.green, // Change the cursor color
                       autofocus: true,
-                      controller: controller.editClassificationTextController,
+                      controller: controller.editCategoryTextController,
                     ),
                     SizedBox(
                         width: double
@@ -50,8 +50,7 @@ class EditCategory extends GetView<InventoryController> {
                                   darkColor), // Set the button's background color
                             ),
                             onPressed: () async {
-                              if (controller
-                                  .editClassificationFormKey.currentState!
+                              if (controller.editCategoryFormKey.currentState!
                                   .validate()) {
                                 List<CategoryModel> categories =
                                     await dbController.readCategories();
@@ -60,23 +59,20 @@ class EditCategory extends GetView<InventoryController> {
                                   categoryNames.add(element.categoryName);
                                 }
                                 if (!categoryNames.contains(controller
-                                    .editClassificationTextController.text)) {
+                                    .editCategoryTextController.text)) {
                                   dbController.updateCategory(
                                       id,
                                       controller
-                                          .editClassificationTextController
-                                          .text);
+                                          .editCategoryTextController.text);
                                   controller.categoryList.value =
                                       await dbController.readCategories();
-                                  controller.editClassificationTextController
-                                      .clear();
+                                  controller.editCategoryTextController.clear();
                                   Get.back();
                                 } else {
-                                  controller.editClassificationTextController
-                                      .clear();
+                                  controller.editCategoryTextController.clear();
                                   Get.back();
                                   Get.snackbar('Repetitive Name'.tr,
-                                      'Classification name already exists'.tr,
+                                      'Category name already exists'.tr,
                                       backgroundColor: accentColor);
                                 }
                               }

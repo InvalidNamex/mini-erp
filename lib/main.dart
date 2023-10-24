@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
             transitionDuration: const Duration(milliseconds: 200)),
         GetPage(
             name: '/new-product',
-            page: () => const NewProduct(),
+            page: () => NewProduct(),
             binding: InventoryBinding(),
             transition: Transition.upToDown,
             transitionDuration: const Duration(milliseconds: 300)),

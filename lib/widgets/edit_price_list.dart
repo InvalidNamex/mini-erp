@@ -14,7 +14,7 @@ class EditPriceList extends GetView<InventoryController> {
         onPressed: () async => Get.defaultDialog(
               title: 'Edit price list'.tr,
               content: Form(
-                key: controller.editClassificationFormKey,
+                key: controller.editCategoryFormKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -50,8 +50,7 @@ class EditPriceList extends GetView<InventoryController> {
                                   darkColor), // Set the button's background color
                             ),
                             onPressed: () async {
-                              if (controller
-                                  .editClassificationFormKey.currentState!
+                              if (controller.editCategoryFormKey.currentState!
                                   .validate()) {
                                 List<PriceListModel> priceLists =
                                     await dbController.readPriceLists();
@@ -60,7 +59,7 @@ class EditPriceList extends GetView<InventoryController> {
                                   priceListNames.add(element.priceListName);
                                 }
                                 if (!priceListNames.contains(controller
-                                    .editClassificationTextController.text)) {
+                                    .editCategoryTextController.text)) {
                                   dbController.updatePriceList(
                                       id,
                                       controller
@@ -75,7 +74,7 @@ class EditPriceList extends GetView<InventoryController> {
                                       .clear();
                                   Get.back();
                                   Get.snackbar('Repetitive Name'.tr,
-                                      'Classification name already exists'.tr,
+                                      'Category name already exists'.tr,
                                       backgroundColor: accentColor);
                                 }
                               }

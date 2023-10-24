@@ -11,13 +11,11 @@ class LocalizationController extends GetxController {
       const key = 'language';
       const value = 'ar';
       await prefs.setString(key, value);
-      print('Arabic saved');
     } else {
       final prefs = await SharedPreferences.getInstance();
       const key = 'language';
       const value = 'en';
       await prefs.setString(key, value);
-      print('English saved');
     }
   }
 

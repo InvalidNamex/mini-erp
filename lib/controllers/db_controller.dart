@@ -255,6 +255,14 @@ class DatabaseController extends GetxController {
     return result.map((json) => PriceListModel.fromJson(json)).toList();
   }
 
+  Future<List<CategoryModel>> readCategoryNames() async {
+    final db = await instance.database;
+    // example of available options final result = await db.query(areasTable, where: );
+    final result = await db.query('CategoryTable');
+    // final result = await db.rawQuery() <----- for sql queries
+    return result.map((json) => CategoryModel.fromJson(json)).toList();
+  }
+
   Future<List<ItemTaxesModel>> readTaxes() async {
     final db = await instance.database;
     // example of available options final result = await db.query(areasTable, where: );

@@ -10,14 +10,15 @@ import '../models/item_models/price_list_model.dart';
 
 class InventoryController extends GetxController {
   static InventoryController instance = Get.find();
-  // CLASSIFICATION
+  final TextEditingController categorySearchTextController =
+      TextEditingController();
+  // category
   RxList<CategoryModel> categoryList = <CategoryModel>[].obs;
-  final GlobalKey<FormState> addClassificationFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> editClassificationFormKey = GlobalKey<FormState>();
-  TextEditingController addClassificationTextController =
-      TextEditingController();
-  TextEditingController editClassificationTextController =
-      TextEditingController();
+  RxList<String> categoryNamesList = <String>[].obs;
+  final GlobalKey<FormState> addCategoryFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> editCategoryFormKey = GlobalKey<FormState>();
+  TextEditingController addCategoryTextController = TextEditingController();
+  TextEditingController editCategoryTextController = TextEditingController();
   // PRICE LIST
   List<ItemPriceListModel> priceListValues = [];
   RxList<PriceListModel> priceListNamesList = <PriceListModel>[].obs;
@@ -28,6 +29,19 @@ class InventoryController extends GetxController {
 
   Future<void> populatePriceList() async {
     priceListNamesList.value = await dbController.readPriceListNames();
+  }
+
+  Future<void> populateCategoryList() async {
+    List<CategoryModel> _y = await dbController.readCategoryNames();
+    List<String> _x = [];
+    if (_y.isNotEmpty) {
+      for (int i = 0; i < _y.length; i++) {
+        _x.add(_y[i].categoryName!);
+      }
+    } else {
+      _x.add('General'.tr);
+    }
+    categoryNamesList.value = _x;
   }
 
   TableRow priceListTableHeaders = TableRow(children: [
@@ -134,7 +148,7 @@ class InventoryController extends GetxController {
     Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
-        'TaxName'.tr,
+        'Tax Name'.tr,
         style: TextStyle(
             color: accentColor, fontSize: 12, fontWeight: FontWeight.bold),
       ),
@@ -209,6 +223,7 @@ class InventoryController extends GetxController {
     categoryList.value = await dbController.readCategories();
     await populateTaxes();
     await populatePriceList();
+    await populateCategoryList();
     super.onInit();
   }
 }
